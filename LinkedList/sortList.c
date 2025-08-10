@@ -1,76 +1,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Node {
+struct Node{
     int data;
     struct Node* next;
 };
 
-struct Node* createNode(int data) {
+struct Node* createNode(int data){
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->data = data;
     newNode->next = NULL;
     return newNode;
 }
 
-struct Node* mergeSortedLists(struct Node* l1, struct Node* l2) {
-    struct Node dummy;
-    struct Node* tail = &dummy;
-    dummy.next = NULL;
-
-    while(l1 && l2) {
-        if(l1->data < l2->data) {
-            tail->next = l1;
-            l1 = l1->next;
-        } else {
-            tail->next = l2;
-            l2 = l2->next;
-        }
-        tail = tail->next;
-    }
-    tail->next = (l1) ? l1 : l2;
-
-    return dummy.next;
-}
-
-struct Node* reverseList(struct Node* head) {
-    struct Node* prev = NULL;
-    struct Node* curr = head;
-    struct Node* next = NULL;
-
-    while(curr) {
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
-    }
-    return prev;
-}
-
-void printList(struct Node* head) {
-    while(head) {
-        printf("%d -> ", head->data);
-        head = head->next;
+void display(struct Node* head){
+    struct Node* ptr = head;
+    while (ptr){
+        printf("%d -> ", ptr->data);
+        ptr = ptr->next;
     }
     printf("NULL\n");
 }
 
-int main() {
-    struct Node* l1 = createNode(1);
-    l1->next = createNode(3);
-    l1->next->next = createNode(5);
+struct Node* sortList(struct Node* head){
+    struct Node *ptr1, *ptr2;
+    int temp;
+    ptr1 = head;
+    while (ptr1){
+        ptr2 = ptr1->next;
+        while (ptr2){
+            if (ptr1->data > ptr2->data){
+                temp = ptr1->data;
+                ptr1->data = ptr2->data;
+                ptr2->data = temp;
+            }
+            ptr2 = ptr2->next;
+        }
+        ptr1 = ptr1->next;
+    }
+    return head;
+}
 
-    struct Node* l2 = createNode(2);
-    l2->next = createNode(4);
-    l2->next->next = createNode(6);
-
-    struct Node* merged = mergeSortedLists(l1, l2);
-    printf("Merged list: ");
-    printList(merged);
-
-    struct Node* reversed = reverseList(merged);
-    printf("Reversed merged list: ");
-    printList(reversed);
-
+int main(){
+    struct Node* head = createNode(5);
+    head->next = createNode(3);
+    head->next->next = createNode(8);
+    head->next->next->next = createNode(1);
+    
+    display(head);
+    head = sortList(head);
+    display(head);
+    
     return 0;
 }
